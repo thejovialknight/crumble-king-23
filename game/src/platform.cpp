@@ -13,7 +13,11 @@ void init_platform(Platform& platform) {
 void update_platform(Platform& platform) {
     // Draw sprites 
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(ColorFromNormalized(Vector4{ 
+        (float)platform.background_color.r, 
+        (float)platform.background_color.g, 
+        (float)platform.background_color.b 
+    }));
     for(PlatformSprite& sprite : platform.sprites) {
         float pixel_scalar = platform.actual_height / platform.logical_height;
         float x_scalar = 1;

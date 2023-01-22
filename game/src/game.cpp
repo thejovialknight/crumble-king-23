@@ -46,20 +46,42 @@ void update_game(Game& game, Platform& platform, double delta_time) {
                 int level_index_to_load = game.menu->level_index_to_load;
                 delete game.menu;
                 game.state = GameState::LEVEL;
-                game.level = new Level(game.levels[level_index_to_load], game.sequences, platform);
+                game.level = new Level(&game.levels[level_index_to_load], game.sequences, platform);
             }
             break;
         case GameState::LEVEL :
             update_level(*game.level, game.sprite_atlas, game.sequences, platform, game.settings, delta_time);
-            if(game.level->ready_to_exit) {
-                delete game.level;
-                game.state = GameState::MENU;
-                game.menu = new MainMenu();
-                game.menu->state = MainMenuState::LEVEL_SELECT;
-                populate_level_select_menu(game.levels, game.menu->list);
+            if(game.level->post_level_info.ready_to_exit) {
+                if(game.level->post_level_info.is_advancing) { // if won
+                    if(game.level_index >= game.levels.size() - 1) {
+                        return_to_menu(game);
+                    }
+                    else {
+                        game.level_index++;
+                        game.level->data = &game.levels[level_index];
+                        load_level(*game.level);
+                    }
+                }
+                else { // if died
+                    game.lives_remaining -= 1;
+                    if(game.lives_remaining < 0) {
+                        return_to_menu(game);
+                    }
+                    else {
+                        load_level(Level& level);
+                    }
+                }
             }
             break;
         default :
             break;
     }
+}
+
+void return_to_menu(Game& game) {
+    delete game.level;
+    game.state = GameState::MENU;
+    game.menu = new MainMenu();
+    game.menu->state = MainMenuState::LEVEL_SELECT;
+    populate_level_select_menu(game.levels, game.menu->list);
 }

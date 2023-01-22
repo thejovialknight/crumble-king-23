@@ -59,6 +59,7 @@ struct Platform {
     std::vector<Texture2D> textures;
     std::vector<PlatformSprite> sprites;
     std::vector<PlatformText> texts;
+    Vec3 background_color = Vec3(0, 0, 0);
 };
 
 // Platform management

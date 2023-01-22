@@ -14,6 +14,10 @@ struct Game {
     Level* level;
     MainMenu* menu;
 
+    // State
+    int lives_remaining = 3;
+    int level_index = 0;
+
     // Data
     Settings settings;
     std::vector<LevelData> levels;
@@ -23,3 +27,4 @@ struct Game {
 
 void init_game(Game& game, Platform& platform);
 void update_game(Game& game, Platform& platform, double delta_time);
+void return_to_menu(Game& game);

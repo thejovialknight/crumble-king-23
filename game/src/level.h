@@ -11,16 +11,40 @@ struct LevelData {
     char tilemap[ROWS * COLUMNS];
 };
 
+enum class LevelState {
+    PRE,
+    ACTIVE,
+    POST
+};
+
+struct PostLevelInfo {
+    bool ready_to_exit = false; // Needed for Game to advance
+    bool is_advancing = false; // True if won level, false if died
+};
+
 struct Level { 
+    // State
+    LevelState state = LevelState::PRE;
+    PostLevelInfo post_level_info;
+    double time_to_next_state;
+    int points = 0;
+
+    // "Entitites"
     King king;
     bool tiles[ROWS * COLUMNS];
-    int points = 0;
-    Sequence* tile_sequence;
     Food food;
-    bool ready_to_exit = false;
+
+    // Data
+    LevelData* data;
+    Sequence* tile_sequence;
 
     Level(const LevelData& data, Sequences& sequences, Platform& platform);
 };
 
+void load_level(Level& level);
 void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
-void display_points(Level& level, Platform& platform);
+void handle_pre_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
+void handle_active_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
+void handle_post_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
+void render_level(Level& level, int sprite_atlas_texture, Platform& platform);
+void goto_post_level(Level& level, bool is_advancing);

@@ -1,0 +1,5 @@
+REFACTOR NOTES
+- Change sprite_atlas_texture and atlas_texture to just atlas. I think I'll understand what that fucking means to be honest.
+- Figure out what you want to do about referencing sequences, and think hard about how to populate and initialize data in the best way possible.
+- Comb through codebase to find things that should be in settings.
+- Try to relegate functionality to the deepest part of the hierarchy possible without ANY friction.
