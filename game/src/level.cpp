@@ -1,20 +1,21 @@
 #include "level.h"
 #include <iostream>
 
-Level::Level(const LevelData& data, Sequences& sequences, Platform& platform) : data(data) {
+Level::Level(LevelData* data, Sequences& sequences, Platform& platform) : data(data) {
     // Initialize state
     food.sequences.push_back(&sequences.food_chicken);
     food.sequences.push_back(&sequences.food_grape);
     food.sequences.push_back(&sequences.food_watermelon);
     food.sequences.push_back(&sequences.food_potato);
-
-    load_level(level);
+    food.animator.sequence = food.sequences[random_int(food.sequences.size())];
+    tile_sequence = &sequences.tile_center;
+    king.animator.sequence = &sequences.king_idle;
 }
 
 void load_level(Level& level) {
     // Populate tiles from tilemap
     int i = 0;
-    for (const char c : level.data.tilemap) {
+    for (const char c : level.data->tilemap) {
         if (c == '\n') { continue; }
 
         level.tiles[i] = false;
@@ -26,11 +27,17 @@ void load_level(Level& level) {
 
     // Initialize data
     level.points = 0;
+    level.food.is_active = false;
     level.food.time_to_next_phase = 4;
-    level.food.animator.sequence = level.food.sequences[random_int(food.sequences.size())];
+    level.food.animator.sequence = level.food.sequences[random_int(level.food.sequences.size())];
+    level.king.velocity = Vec2(0, 0);
+    level.king.jump_state = JumpState::GROUND;
+    level.king.acceleration_mod = 1;
     // Initiate pre level
     level.state = LevelState::PRE;
     level.time_to_next_state = 2;
+    level.post_level_info.ready_to_exit = false;
+    level.post_level_info.behavior = PostLevelBehavior::RESTART;
 }
 
 void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
@@ -46,39 +53,43 @@ void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, 
             break;
     }
     
+    // Menu on escape
+    if (platform.input.pause.just_pressed) {
+        goto_post_level(level, PostLevelBehavior::QUIT);
+    }
+
     render_level(level, sprite_atlas_texture, platform);
 }
 
 void handle_active_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
+    platform.background_color = Vec3(0, 0, 0);
     // Level logic
     update_king(level.king, platform, sequences, settings, delta_time);
     resolve_king_velocity(level.king, level.tiles);
     update_food(level.points, level.food, level.king, platform, settings, delta_time);
     if(is_king_dead(level.king, platform)) {
-        goto_post_level(level);
+        platform.background_color = Vec3(0.5, 0, 0);
+        goto_post_level(level, PostLevelBehavior::RESTART);
     }
-
-    // Menu on escape
-    if (platform.input.pause.just_pressed) { 
-        goto_post_level(level);
+    else if (level.points >= 2) {
+        goto_post_level(level, PostLevelBehavior::ADVANCE);
     }
 }
 
-void handle_pre_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
+void handle_pre_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {  
     platform.background_color = Vec3(0, 0, 0);
-    time_to_next_state -= delta_time;
-    if(time_to_next_state <= 0) {
+    level.time_to_next_state -= delta_time;
+    if(level.time_to_next_state <= 0 || platform.input.jump.just_pressed) {
         level.state = LevelState::ACTIVE;
     }
 }
 
 void handle_post_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
-    platform.background_color = Vec3(1, 0, 0);
-    time_to_next_state -= delta_time;
-    if(time_to_next_state <= 0) {
+    level.time_to_next_state -= delta_time;
+    if(level.time_to_next_state <= 0 || platform.input.jump.just_pressed) {
         level.post_level_info.ready_to_exit = true;
     }
-}
+} 
 
 void render_level(Level& level, int sprite_atlas_texture, Platform& platform) {
     // Draw tiles
@@ -109,9 +120,6 @@ void render_level(Level& level, int sprite_atlas_texture, Platform& platform) {
     }
 
     // Draw points
-    std::string points_word = "Points: ";
-    std::string points_string_text = std::to_string(level.points);
-    std::string pre_converted_concat_str = points_word + points_string_text;
     platform.texts.emplace_back(PlatformText(
         "Points: " + std::to_string(level.points),
         64,
@@ -121,9 +129,9 @@ void render_level(Level& level, int sprite_atlas_texture, Platform& platform) {
     ));
 }
 
-void goto_post_level(Level& level, bool is_advancing) {
+void goto_post_level(Level& level, PostLevelBehavior behavior) {
     level.state = LevelState::POST;
-    level.post_level_info.is_advancing = is_advancing;
+    level.post_level_info.behavior = behavior;
     level.time_to_next_state = 2;
 }
 

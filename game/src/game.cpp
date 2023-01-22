@@ -38,7 +38,9 @@ void init_game(Game& game, Platform& platform) {
 }
 
 void update_game(Game& game, Platform& platform, double delta_time) {
+    // TODO: On function key or something. This is a bit slow every frame, obviously.
     populate_settings(get_file_text("resources/config/config.txt"), game.settings);
+
     switch(game.state) {
         case GameState::MENU :
             update_main_menu(*game.menu, game.levels, platform);\
@@ -46,29 +48,44 @@ void update_game(Game& game, Platform& platform, double delta_time) {
                 int level_index_to_load = game.menu->level_index_to_load;
                 delete game.menu;
                 game.state = GameState::LEVEL;
+                game.lives_remaining = 3;
                 game.level = new Level(&game.levels[level_index_to_load], game.sequences, platform);
+                load_level(*game.level);
             }
+            platform.background_color = Vec3(0, 0, 0);
             break;
         case GameState::LEVEL :
             update_level(*game.level, game.sprite_atlas, game.sequences, platform, game.settings, delta_time);
-            if(game.level->post_level_info.ready_to_exit) {
-                if(game.level->post_level_info.is_advancing) { // if won
+            platform.texts.emplace_back(PlatformText(
+                "Lives: " + std::to_string(game.lives_remaining),
+                64,
+                600,
+                100,
+                Vec3(0.9, 0.2, 0.2)
+            ));
+            if (game.level->post_level_info.behavior == PostLevelBehavior::QUIT) {
+                return_to_menu(game);
+                break;
+            }
+            else if(game.level->post_level_info.ready_to_exit) {
+                if(game.level->post_level_info.behavior == PostLevelBehavior::ADVANCE) { // if won
                     if(game.level_index >= game.levels.size() - 1) {
                         return_to_menu(game);
                     }
                     else {
                         game.level_index++;
-                        game.level->data = &game.levels[level_index];
+                        game.level->data = &game.levels[game.level_index];
                         load_level(*game.level);
                     }
                 }
                 else { // if died
+                    platform.background_color = Vec3(0, 0, 0);
                     game.lives_remaining -= 1;
                     if(game.lives_remaining < 0) {
                         return_to_menu(game);
                     }
                     else {
-                        load_level(Level& level);
+                        load_level(*game.level);
                     }
                 }
             }

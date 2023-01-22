@@ -17,9 +17,15 @@ enum class LevelState {
     POST
 };
 
+enum class PostLevelBehavior {
+    RESTART,
+    ADVANCE,
+    QUIT
+};
+
 struct PostLevelInfo {
     bool ready_to_exit = false; // Needed for Game to advance
-    bool is_advancing = false; // True if won level, false if died
+    PostLevelBehavior behavior = PostLevelBehavior::RESTART; // True if won level, false if died
 };
 
 struct Level { 
@@ -38,7 +44,7 @@ struct Level {
     LevelData* data;
     Sequence* tile_sequence;
 
-    Level(const LevelData& data, Sequences& sequences, Platform& platform);
+    Level(LevelData* data, Sequences& sequences, Platform& platform);
 };
 
 void load_level(Level& level);
@@ -47,4 +53,4 @@ void handle_pre_level(Level& level, int sprite_atlas_texture, Sequences& sequenc
 void handle_active_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
 void handle_post_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
 void render_level(Level& level, int sprite_atlas_texture, Platform& platform);
-void goto_post_level(Level& level, bool is_advancing);
+void goto_post_level(Level& level, PostLevelBehavior behavior);
