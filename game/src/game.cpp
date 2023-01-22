@@ -46,7 +46,7 @@ void update_game(Game& game, Platform& platform, double delta_time) {
                 int level_index_to_load = game.menu->level_index_to_load;
                 delete game.menu;
                 game.state = GameState::LEVEL;
-                game.level = new Level(game.levels[level_index_to_load], platform);
+                game.level = new Level(game.levels[level_index_to_load], game.sequences, platform);
             }
             break;
         case GameState::LEVEL :

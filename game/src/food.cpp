@@ -15,6 +15,7 @@ void update_food(int& points, Food& food, King& king, Platform& platform, Settin
 			food.time_to_next_phase = expiration_length;
 			food.is_active = true;
 			food.position = food.spawn_positions[random_int(food.spawn_positions.size())];
+			food.animator.sequence = food.sequences[random_int(food.sequences.size())];
 		}
 	}
 
@@ -23,7 +24,10 @@ void update_food(int& points, Food& food, King& king, Platform& platform, Settin
 	if(food.is_active && abs((king.position - food.position).magnitude()) <= distance_to_eat) {
 		hide_food(food, settings);
 		points++;
+		king.acceleration_mod *= 0.75;
 	}
+
+	iterate_animator(food.animator, delta_time);
 };
 
 void hide_food(Food& food, Settings& settings) {

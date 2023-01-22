@@ -1,5 +1,34 @@
 #include "animation.h"
 
+void iterate_animator(Animator& animator, double delta_time) {
+	animator.time_till_next_frame -= delta_time;
+	if (animator.time_till_next_frame <= 0) {
+		animator.time_till_next_frame = animator.frame_length;
+		animator.frame++;
+	}
+
+	// Loop iteration outside of first if statement in case animation is changed to one with less frames
+	if (animator.frame >= animator.sequence->frames.size()) {
+		animator.frame = 0;
+	}
+}
+
+PlatformSprite sprite_from_animator(int atlas_texture, Animator& animator, const Vec2& position) {
+	return sprite_from_sequence(atlas_texture, *animator.sequence, animator.frame, position, animator.is_flipped);
+}
+
+PlatformSprite sprite_from_sequence(int atlas_texture, const Sequence& sequence, int frame, const Vec2& position, bool is_flipped) {
+	return PlatformSprite(
+		atlas_texture,
+		sequence.frames[frame],
+		(int)position.x,
+		(int)position.y,
+		(int)sequence.origin.x,
+		(int)sequence.origin.y,
+		is_flipped
+	);
+}
+
 void populate_sequences(const std::string text, Sequences& sequences) {
 	for(int i = 0; i < text.length(); ++i) {
 		if(!try_iterate_past_char('@', text, i)) break;
@@ -10,9 +39,11 @@ void populate_sequences(const std::string text, Sequences& sequences) {
 		sequence.origin.x = std::stod(pull_string_before_char(',', text, i));
 		sequence.origin.y = std::stod(pull_string_before_char(':', text, i));
 		while(text[i] != '\n' && text[i] != '\0') {
+			int pos_x = pull_int_before_char(',', text, i);
+			int pos_y = pull_int_before_char(';', text, i);
 			sequence.frames.emplace_back(IRect(
-				std::stoi(pull_string_before_char(',', text, i)),
-				std::stoi(pull_string_before_char(';', text, i)),
+				pos_x,
+				pos_y,
 				width,
 				height
 			));
@@ -62,4 +93,8 @@ std::string pull_string_before_char(const char c, const std::string& text, int& 
 	}
 	i++;
 	return data_str;
+}
+
+int pull_int_before_char(const char c, const std::string& text, int& i) {
+	return std::stoi(pull_string_before_char(c, text, i));
 }

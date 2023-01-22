@@ -26,13 +26,15 @@ struct PlatformInput {
 };
 
 struct PlatformSprite {
-    int texture_handle;
-    IRect dest;
-    int x;
-    int y;
+    int atlas_texture;
+    IRect source;
+    double x;
+    double y;
+    double origin_x;
+    double origin_y;
     bool is_flipped;
 
-    PlatformSprite(int texture_handle, IRect dest, int x, int y, bool is_flipped) : texture_handle(texture_handle), dest(dest), x(x), y(y), is_flipped(is_flipped) {}
+    PlatformSprite(int atlas_texture, IRect source, int x, int y, int origin_x, int origin_y, bool is_flipped) : atlas_texture(atlas_texture), source(source), x(x), y(y), origin_x(origin_x), origin_y(origin_y), is_flipped(is_flipped) {}
 };
 
 // TODO: Refactor for pixel art text with atlas
@@ -72,5 +74,4 @@ const char* get_file_text(const char* fname);
 
 // Sprite handling
 int new_texture_handle(Platform& platform, const char* fname);
-void put_sprite(Platform& platform, int atlas_texture, const IRect dest, int x, int y);
-void put_sprite(Platform& platform, int atlas_texture, const IRect dest, int x, int y, bool is_flipped);
+void put_sprite(Platform& platform, PlatformSprite& sprite);

@@ -1,6 +1,6 @@
 #include "king.h"
 
-void update_king(King& king, Platform& platform, Settings& settings, double delta_time) {
+void update_king(King& king, Platform& platform, Sequences& sequences, const Settings& settings, double delta_time) {
     // Constants
     const double max_speed = settings.king_max_speed;
     const double acceleration = settings.king_acceleration;
@@ -14,51 +14,30 @@ void update_king(King& king, Platform& platform, Settings& settings, double delt
     const double fall_gravity_scale = settings.fall_gravity_scale;
     const double gravity = settings.gravity;
 
-    // Gravity and jump
+    // Gravity
     king.velocity.y += gravity * king.gravity_scale * delta_time;
-    if (platform.input.jump.just_pressed && king.is_grounded) { 
-        king.is_grounded = false;
-        king.velocity.y = -jump_speed; 
-    }
 
     // Horizontal movement:
     // - Adds acceleration to velocity in keyboard direction.
     // - Clamps speed to a maximum.
     // - Flips sprite appropriately.
+    double modded_acceleration = acceleration * king.acceleration_mod;
 	if (platform.input.left.held) {
-		king.velocity.x -= acceleration * delta_time;
+        king.animator.is_flipped = true;
+		king.velocity.x -= modded_acceleration * delta_time;
 		if(king.velocity.x < -max_speed) {
 			king.velocity.x = -max_speed;
 		}
 	}
 
 	if(platform.input.right.held) {
-		king.velocity.x += acceleration * delta_time;
+        king.animator.is_flipped = false;
+		king.velocity.x += modded_acceleration * delta_time;
 
 		if(king.velocity.x > max_speed) {
 			king.velocity.x = max_speed;
 		}
 	}
-
-    // Horizontal decelleration:
-    // - Checks if we aren't inputting any horizontal input.
-    // - Adds acceleration in opposite direction of current velocity.
-    // - Sets x velocity to 0 on the frame we overshoot the other direction.
-    if(!platform.input.left.held && !platform.input.right.held) {
-        if(king.velocity.x > 0) {
-            king.velocity.x -= acceleration * delta_time;
-            if(king.velocity.x < 0) {
-                king.velocity.x = 0;
-            }
-        }
-
-        if(king.velocity.x < 0) {
-            king.velocity.x += acceleration * delta_time;
-            if(king.velocity.x > 0) {
-                king.velocity.x = 0;
-            }
-        }
-    }
 
     king.jump_buffer -= delta_time;
     king.coyote_time -= delta_time;
@@ -150,8 +129,15 @@ void update_king(King& king, Platform& platform, Settings& settings, double delt
     }
 
     // Set king sprite
-    //king.texture = king.idle_texture;
-    //if(!king.is_grounded) { king.texture = king.float_texture; }
+    king.animator.sequence = &sequences.king_idle;
+    if (king.velocity.x != 0) { king.animator.sequence = &sequences.king_run; }
+    if(!king.is_grounded) { 
+        king.animator.sequence = &sequences.king_jump; 
+        if (king.jump_state == JumpState::FLOAT) {
+            king.animator.sequence = &sequences.king_float;
+        }
+    }
+    iterate_animator(king.animator, delta_time);
 }
 
 bool is_king_dead(King& king, Platform& platform) {

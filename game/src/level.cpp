@@ -1,7 +1,7 @@
 #include "level.h"
 #include <iostream>
 
-Level::Level(LevelData& data, Platform& platform) {
+Level::Level(const LevelData& data, Sequences& sequences, Platform& platform) {
     // Populate tiles from tilemap
     int i = 0;
     for (const char c : data.tilemap) {
@@ -13,15 +13,21 @@ Level::Level(LevelData& data, Platform& platform) {
         if (c == '#') { tiles[i] = true; }
         i++;
     }
+    tile_sequence = &sequences.tile_center;
 
     // Initialize state
     points = 0;
     food.time_to_next_phase = 4;
+    food.sequences.push_back(&sequences.food_chicken);
+    food.sequences.push_back(&sequences.food_grape);
+    food.sequences.push_back(&sequences.food_watermelon);
+    food.sequences.push_back(&sequences.food_potato);
+    food.animator.sequence = food.sequences[random_int(food.sequences.size())];
 }
 
 void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
     // Level logic
-    update_king(level.king, platform, settings, delta_time);
+    update_king(level.king, platform, sequences, settings, delta_time);
     resolve_king_velocity(level.king, level.tiles);
     update_food(level.points, level.food, level.king, platform, settings, delta_time);
     if(is_king_dead(level.king, platform)) {
@@ -37,15 +43,28 @@ void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, 
     // Draw tiles
     for (int i = 0; i < ROWS * COLUMNS; ++i) { // put some sprites
         if (level.tiles[i] == true) {
-            Vec2 position = tile_position_from_index(level.tiles, i);
-            put_sprite(platform, sprite_atlas_texture, sequences.tile_center.frames[0], (int)position.x, (int)position.y, (!level.king.is_facing_right));
+            put_sprite(platform, sprite_from_sequence(
+                sprite_atlas_texture,
+                *level.tile_sequence,
+                0,
+                tile_position_from_index(level.tiles, i),
+                false
+            ));
         }
     }
     // Draw king
-    put_sprite(platform, sprite_atlas_texture, sequences.king_idle.frames[0], level.king.position.x, level.king.position.y);
+    put_sprite(platform, sprite_from_animator(
+        sprite_atlas_texture, 
+        level.king.animator,
+        level.king.position
+    ));
     // Draw food if active
     if (level.food.is_active) {
-        put_sprite(platform, sprite_atlas_texture, sequences.food_grape.frames[0], level.food.position.x, level.food.position.y);
+        put_sprite(platform, sprite_from_animator(
+            sprite_atlas_texture, 
+            level.food.animator,
+            level.food.position
+        ));
     }
 
     std::string points_word = "Points: ";

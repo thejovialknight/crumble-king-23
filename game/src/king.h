@@ -3,6 +3,7 @@
 #include "platform.h"
 #include "settings.h"
 #include "utils.h"
+#include "animation.h"
 
 enum class JumpState {
     GROUND,
@@ -17,14 +18,11 @@ struct King {
     double jump_buffer = 0;
     double coyote_time = 0;
     double gravity_scale = 1;
+    double acceleration_mod = 1;
     bool is_grounded = false;
     bool is_facing_right = true;
-
-    // List indices
-    int current_frame = 0;
-    int idle_sequence = 0;
-    int run_sequence = 0;
+    Animator animator;
 };
 
-void update_king(King& king, Platform& platform, Settings& settings, double delta_time);
+void update_king(King& king, Platform& platform, Sequences& sequences, const Settings& settings, double delta_time);
 bool is_king_dead(King& king, Platform& platform);

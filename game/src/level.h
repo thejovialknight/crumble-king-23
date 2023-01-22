@@ -15,11 +15,11 @@ struct Level {
     King king;
     bool tiles[ROWS * COLUMNS];
     int points = 0;
-    int brick_texture = 0;
+    Sequence* tile_sequence;
     Food food;
     bool ready_to_exit = false;
 
-    Level(LevelData& data, Platform& platform);
+    Level(const LevelData& data, Sequences& sequences, Platform& platform);
 };
 
 void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);

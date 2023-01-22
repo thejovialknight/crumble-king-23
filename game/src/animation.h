@@ -14,6 +14,7 @@
 #include <string>
 #include "vec2.h"
 #include "rect.h"
+#include "platform.h"
 
 struct Sequence {
 	Vec2 origin = Vec2(0, 0);
@@ -41,6 +42,18 @@ struct Sequences {
 	Sequence guard_end;
 };
 
+struct Animator {
+	Sequence* sequence;
+	int frame = 0;
+	double time_till_next_frame = 0;
+	double frame_length = 0.1;
+	bool is_flipped = false;
+};
+
+void iterate_animator(Animator& animator, double delta_time);
+PlatformSprite sprite_from_animator(int atlas_texture, Animator& animator, const Vec2& position);
+PlatformSprite sprite_from_sequence(int atlas_texture, const Sequence& sequence, int frame, const Vec2& position, bool is_flipped);
 void populate_sequences(const std::string text, Sequences& sequences);
 bool try_iterate_past_char(const char c, const std::string& text, int& i);
 std::string pull_string_before_char(const char c, const std::string& text, int& i);
+int pull_int_before_char(const char c, const std::string& text, int& i);

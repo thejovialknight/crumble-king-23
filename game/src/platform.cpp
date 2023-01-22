@@ -19,7 +19,28 @@ void update_platform(Platform& platform) {
         float x_scalar = 1;
         if (sprite.is_flipped) { x_scalar = -1; }
         // TODO: Implement x_scalar stuff. Maybe when we switch to SDL.
-        DrawTextureEx(platform.textures[sprite.texture_handle], Vector2{ sprite.x * pixel_scalar, sprite.y * pixel_scalar }, 0, pixel_scalar, WHITE);
+        DrawTexturePro(
+            platform.textures[sprite.atlas_texture], // Atlas texture
+            Rectangle{  // Source
+                (float)sprite.source.position.x,
+                (float)sprite.source.position.y,
+                (float)sprite.source.size.x * x_scalar,
+                (float)sprite.source.size.y,
+            },
+            Rectangle{ // Dest
+                (float)sprite.x * pixel_scalar,
+                (float)sprite.y * pixel_scalar,
+                (float)sprite.source.size.x * pixel_scalar,
+                (float)sprite.source.size.y * pixel_scalar,
+            },
+            Vector2{ // origin
+                (float)sprite.origin_x,
+                (float)sprite.origin_y
+            },
+            0,
+            WHITE
+        );
+        //Vector2{ sprite.x * pixel_scalar, sprite.y * pixel_scalar }, 0, pixel_scalar, WHITE);
     }
     EndDrawing();
 
@@ -74,10 +95,6 @@ int new_texture_handle(Platform& platform, const char* fname) {
     return platform.textures.size() - 1;
 }
 
-void put_sprite(Platform& platform, int atlas_texture, const IRect dest, int x, int y) {
-    put_sprite(platform, atlas_texture, dest, x, y, false);
-}
-
-void put_sprite(Platform& platform, int atlas_texture, const IRect dest, int x, int y, bool is_flipped) {
-    platform.sprites.emplace_back(PlatformSprite(atlas_texture, dest, x, y, is_flipped));
+void put_sprite(Platform& platform, PlatformSprite& sprite) {
+    platform.sprites.emplace_back(sprite);
 }
