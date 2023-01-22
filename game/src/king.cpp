@@ -129,6 +129,7 @@ void update_king(King& king, Platform& platform, Sequences& sequences, const Set
     }
 
     // Set king sprite
+    king.animator.frame_length = 0.075;
     king.animator.sequence = &sequences.king_idle;
     if (king.velocity.x != 0) { king.animator.sequence = &sequences.king_run; }
     if(!king.is_grounded) { 

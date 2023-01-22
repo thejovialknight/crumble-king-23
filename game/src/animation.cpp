@@ -64,8 +64,8 @@ void populate_sequences(const std::string text, Sequences& sequences) {
 		if(sequence_name == "KING_JUMP") { sequences.king_jump = sequence; }
 		if(sequence_name == "KING_FLOAT") { sequences.king_float = sequence; }
 		if(sequence_name == "GUARD_IDLE") { sequences.guard_idle = sequence; }
-		if(sequence_name == "GUARD_RUN") { sequences.guard_idle = sequence; }
-		if(sequence_name == "GUARD_JUMP") { sequences.guard_run = sequence; }
+		if(sequence_name == "GUARD_RUN") { sequences.guard_run = sequence; }
+		if(sequence_name == "GUARD_JUMP") { sequences.guard_jump = sequence; }
 		if(sequence_name == "GUARD_END") { sequences.guard_end = sequence; }
 	}
 }

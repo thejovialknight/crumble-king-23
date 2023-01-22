@@ -1,9 +1,6 @@
 // Should we change sequences to a vector of sequences and have the Sequence struct have either an enum or GASP a string to reference the right one.
 // Then, the king can just get the integer index into the vector on load by asking where in the vector is the string or whatnot.
 // Might be better and more robust, in all honesty
-//
-// We have a problem with the pulling in animations from the file. The parsing is getting caught up.
-// Debug that to see whats the problem. Breakpoints have already been set.
 // 
 // The next thing after that to do is get the food and king to control their current frame and whatnot so that the level renderer doesnt have to do it.
 // In fact, there should be a draw_sprite function that takes a platform, sequence, sprite atlas, and current frame and does that work.
