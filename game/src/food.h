@@ -2,6 +2,7 @@
 #include <vector>
 #include "random.h"
 #include "king.h"
+#include "sound.h"
 
 struct Food {
 	Vec2 position = Vec2(0,0);
@@ -12,5 +13,5 @@ struct Food {
 	std::vector<Sequence*> sequences;
 };
 
-void update_food(int& points, Food& food, King& king, Platform& platform, Settings& settings, double delta_time);
+void update_food(int& points, Food& food, King& king, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
 void hide_food(Food& food, Settings& settings);

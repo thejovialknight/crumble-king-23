@@ -2,5 +2,5 @@
 
 enum class GameState {
     MENU,
-    LEVEL
+    TOWER
 };

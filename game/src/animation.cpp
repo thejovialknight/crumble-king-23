@@ -13,13 +13,13 @@ void iterate_animator(Animator& animator, double delta_time) {
 	}
 }
 
-PlatformSprite sprite_from_animator(int atlas_texture, Animator& animator, const Vec2& position) {
-	return sprite_from_sequence(atlas_texture, *animator.sequence, animator.frame, position, animator.is_flipped);
+PlatformSprite sprite_from_animator(int atlas, Animator& animator, const Vec2& position) {
+	return sprite_from_sequence(atlas, *animator.sequence, animator.frame, position, animator.is_flipped);
 }
 
-PlatformSprite sprite_from_sequence(int atlas_texture, const Sequence& sequence, int frame, const Vec2& position, bool is_flipped) {
+PlatformSprite sprite_from_sequence(int atlas, const Sequence& sequence, int frame, const Vec2& position, bool is_flipped) {
 	return PlatformSprite(
-		atlas_texture,
+		atlas,
 		sequence.frames[frame],
 		(int)position.x,
 		(int)position.y,
@@ -34,6 +34,7 @@ void populate_sequences(const std::string text, Sequences& sequences) {
 		if(!try_iterate_past_char('@', text, i)) break;
 		std::string sequence_name = pull_string_before_char(',', text, i);
 		Sequence sequence;
+		// TODO: stod? int? what?
 		int width = std::stod(pull_string_before_char(',', text, i));
 		int height = std::stod(pull_string_before_char(',', text, i));
 		sequence.origin.x = std::stod(pull_string_before_char(',', text, i));
@@ -70,31 +71,3 @@ void populate_sequences(const std::string text, Sequences& sequences) {
 	}
 }
 
-// Iterates i to the position after the specified character index
-// Returns bool if reached the end of file first
-bool try_iterate_past_char(const char c, const std::string& text, int& i) {
-	while(text[i] != c) { 
-		i++;
-		if(i < text.length()) {
-			return false;
-		}
-	}
-	i++;
-	return true;
-}
-
-// Returns the string from i to the index of the specified character - 1
-// Iterates i to the position after the specified character index
-std::string pull_string_before_char(const char c, const std::string& text, int& i) {
-	std::string data_str;
-	while(text[i] != c) { 
-		data_str += text[i];
-		i++;
-	}
-	i++;
-	return data_str;
-}
-
-int pull_int_before_char(const char c, const std::string& text, int& i) {
-	return std::stoi(pull_string_before_char(c, text, i));
-}

@@ -6,6 +6,7 @@ void init_platform(Platform& platform) {
     platform.logical_width = 640;
     platform.logical_height = 360;
     InitWindow(platform.actual_width, platform.actual_height, "Crumble King");
+    InitAudioDevice();
     SetExitKey(KEY_F4);
     SetTargetFPS(60);
 }
@@ -22,9 +23,8 @@ void update_platform(Platform& platform) {
         float pixel_scalar = platform.actual_height / platform.logical_height;
         float x_scalar = 1;
         if (sprite.is_flipped) { x_scalar = -1; }
-        // TODO: Implement x_scalar stuff. Maybe when we switch to SDL.
         DrawTexturePro(
-            platform.textures[sprite.atlas_texture], // Atlas texture
+            platform.texture_assets[sprite.atlas], // Atlas texture
             Rectangle{  // Source
                 (float)sprite.source.position.x,
                 (float)sprite.source.position.y,
@@ -44,7 +44,6 @@ void update_platform(Platform& platform) {
             0,
             WHITE
         );
-        //Vector2{ sprite.x * pixel_scalar, sprite.y * pixel_scalar }, 0, pixel_scalar, WHITE);
     }
     EndDrawing();
 
@@ -64,6 +63,14 @@ void update_platform(Platform& platform) {
     
     // Clear texts
     platform.texts.clear();
+
+    // Play sounds
+    for(PlatformSound& sound : platform.sounds) {
+        PlaySound(platform.sound_assets[sound.handle]);
+    }
+    
+    // Clear sounds
+    platform.sounds.clear();
 
     // Get next frame input
     query_button(platform.input.left);
@@ -94,11 +101,25 @@ const char* get_file_text(const char* fname) {
 }
 
 int new_texture_handle(Platform& platform, const char* fname) {
-    Texture2D texture = LoadTexture(fname);
-    platform.textures.emplace_back(texture);
-    return platform.textures.size() - 1;
+    Texture2D texture_asset = LoadTexture(fname);
+    platform.texture_assets.emplace_back(texture_asset);
+    return platform.texture_assets.size() - 1;
 }
 
-void put_sprite(Platform& platform, PlatformSprite& sprite) {
-    platform.sprites.emplace_back(sprite);
+int new_sound_handle(Platform& platform, const char* fname) {
+    Sound sound_asset = LoadSound(fname);
+    platform.sound_assets.emplace_back(sound_asset);
+    return platform.sound_assets.size() - 1;
+}
+
+void put_sprite(Platform& platform, PlatformSprite sprite) {
+    platform.sprites.push_back(sprite);
+}
+
+void buffer_sound(Platform& platform, int handle, double volume) {
+    platform.sounds.push_back(PlatformSound(handle, volume));
+}
+
+void stop_sound(Platform& platform, int handle) {
+    StopSound(platform.sound_assets[handle]);
 }

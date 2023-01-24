@@ -1,6 +1,6 @@
 #include "king.h"
 
-void update_king(King& king, Platform& platform, Sequences& sequences, const Settings& settings, double delta_time) {
+void update_king(King& king, Platform& platform, Sequences& sequences, Sounds& sounds, const Settings& settings, double delta_time) {
     // Constants
     const double max_speed = settings.king_max_speed;
     const double acceleration = settings.king_acceleration;
@@ -50,6 +50,7 @@ void update_king(King& king, Platform& platform, Sequences& sequences, const Set
             king.jump_state = JumpState::JUMP;
             king.velocity.y = -jump_speed;
             king.jump_buffer = 0;
+            buffer_sound(platform, sounds.king_jump, 1);
         }
     }
 
@@ -65,6 +66,7 @@ void update_king(King& king, Platform& platform, Sequences& sequences, const Set
             king.jump_state = JumpState::JUMP;
             king.velocity.y = -jump_speed;
             king.coyote_time = 0;
+            buffer_sound(platform, sounds.king_jump, 1);
         }
 
         // Horizontal decelleration:
@@ -103,9 +105,11 @@ void update_king(King& king, Platform& platform, Sequences& sequences, const Set
             if(king.coyote_time > 0) {
                 king.coyote_time = 0;
                 king.velocity.y = -jump_speed;
+                buffer_sound(platform, sounds.king_jump, 1);
             }
             else {
                 king.jump_state = JumpState::FLOAT;
+                buffer_sound(platform, sounds.king_float, 1);
                 king.velocity.y = -float_velocity;
                 king.gravity_scale = float_start_gravity_scale;
 

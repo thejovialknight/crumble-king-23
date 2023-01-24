@@ -5,6 +5,7 @@
 #include "tiles.h"
 #include "food.h"
 #include "animation.h"
+#include "sound.h"
 
 struct LevelData {
     std::string name;
@@ -33,7 +34,8 @@ struct Level {
     LevelState state = LevelState::PRE;
     PostLevelInfo post_level_info;
     double time_to_next_state;
-    int points = 0;
+    int score = 0;
+    bool ready_to_play_dead_sound = false;
 
     // "Entitites"
     King king;
@@ -47,10 +49,12 @@ struct Level {
     Level(LevelData* data, Sequences& sequences, Platform& platform);
 };
 
-void load_level(Level& level);
-void update_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
-void handle_pre_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
-void handle_active_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
-void handle_post_level(Level& level, int sprite_atlas_texture, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
-void render_level(Level& level, int sprite_atlas_texture, Platform& platform);
+void load_level(Level& level, Sounds& sounds, Platform& platform);
+void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
+void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
+void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
+void handle_post_level(Level& level, int atlas, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
+void render_level(Level& level, int atlas, Platform& platform);
 void goto_post_level(Level& level, PostLevelBehavior behavior);
+int music_from_level_name(std::string& name, Sounds& sounds);
+

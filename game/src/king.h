@@ -4,6 +4,7 @@
 #include "settings.h"
 #include "utils.h"
 #include "animation.h"
+#include "sound.h"
 
 enum class JumpState {
     GROUND,
@@ -24,5 +25,5 @@ struct King {
     Animator animator;
 };
 
-void update_king(King& king, Platform& platform, Sequences& sequences, const Settings& settings, double delta_time);
+void update_king(King& king, Platform& platform, Sequences& sequences, Sounds& sounds, const Settings& settings, double delta_time);
 bool is_king_dead(King& king, Platform& platform);

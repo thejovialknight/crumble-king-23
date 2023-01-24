@@ -7,24 +7,28 @@
 #include "game_state.h"
 #include "settings.h"
 #include "animation.h"
+#include "sound.h"
+#include "tower.h"
+#include "text_parsing.h"
+#include "high_scores.h"
 
 struct Game {
     // Scenes
     GameState state;
-    Level* level;
+    Tower* tower;
     MainMenu* menu;
-
-    // State
-    int lives_remaining = 3;
-    int level_index = 0;
 
     // Data
     Settings settings;
-    std::vector<LevelData> levels;
     Sequences sequences;
-    int sprite_atlas; // Texture index
+    Sounds sounds;
+    int atlas; // Texture index
+	std::vector<LevelData> levels;
+    std::vector<TowerData> towers;
+    std::vector<int> high_scores;
 };
 
 void init_game(Game& game, Platform& platform);
 void update_game(Game& game, Platform& platform, double delta_time);
 void return_to_menu(Game& game);
+void reset_data(Game& game, Platform& platform);

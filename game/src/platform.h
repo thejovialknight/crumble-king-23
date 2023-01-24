@@ -26,7 +26,7 @@ struct PlatformInput {
 };
 
 struct PlatformSprite {
-    int atlas_texture;
+    int atlas;
     IRect source;
     double x;
     double y;
@@ -34,7 +34,14 @@ struct PlatformSprite {
     double origin_y;
     bool is_flipped;
 
-    PlatformSprite(int atlas_texture, IRect source, int x, int y, int origin_x, int origin_y, bool is_flipped) : atlas_texture(atlas_texture), source(source), x(x), y(y), origin_x(origin_x), origin_y(origin_y), is_flipped(is_flipped) {}
+    PlatformSprite(int atlas, IRect source, int x, int y, int origin_x, int origin_y, bool is_flipped) : atlas(atlas), source(source), x(x), y(y), origin_x(origin_x), origin_y(origin_y), is_flipped(is_flipped) {}
+};
+
+struct PlatformSound {
+    int handle;
+    double volume = 1;
+
+    PlatformSound(int handle, double volume) : handle(handle), volume(volume) {}
 };
 
 // TODO: Refactor for pixel art text with atlas
@@ -56,8 +63,10 @@ struct Platform {
     int logical_height;
     bool window_should_close = false;
     PlatformInput input;
-    std::vector<Texture2D> textures;
+    std::vector<Texture2D> texture_assets;
+    std::vector<Sound> sound_assets;
     std::vector<PlatformSprite> sprites;
+    std::vector<PlatformSound> sounds;
     std::vector<PlatformText> texts;
     Vec3 background_color = Vec3(0, 0, 0);
 };
@@ -75,4 +84,9 @@ const char* get_file_text(const char* fname);
 
 // Sprite handling
 int new_texture_handle(Platform& platform, const char* fname);
-void put_sprite(Platform& platform, PlatformSprite& sprite);
+void put_sprite(Platform& platform, PlatformSprite sprite);
+
+// Sound handling
+int new_sound_handle(Platform& platform, const char* fname);
+void buffer_sound(Platform& platform, int handle, double volume);
+void stop_sound(Platform& platform, int handle);
