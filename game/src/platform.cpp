@@ -19,6 +19,21 @@ void update_platform(Platform& platform) {
         (float)platform.background_color.g, 
         (float)platform.background_color.b 
     }));
+
+    // Draw texts
+    for (PlatformText& text : platform.texts) {
+        DrawText(text.text.c_str(), text.x, text.y, text.font_size,
+            ColorFromNormalized(Vector4{
+                (float)text.color.r,
+                (float)text.color.g,
+                (float)text.color.b, 1.0
+                })
+        );
+    }
+
+    // Clear texts
+    platform.texts.clear();
+
     for(PlatformSprite& sprite : platform.sprites) {
         float pixel_scalar = platform.actual_height / platform.logical_height;
         float x_scalar = 1;
@@ -38,8 +53,8 @@ void update_platform(Platform& platform) {
                 (float)sprite.source.size.y * pixel_scalar,
             },
             Vector2{ // origin
-                (float)sprite.origin_x,
-                (float)sprite.origin_y
+                (float)sprite.origin_x * pixel_scalar,
+                (float)sprite.origin_y * pixel_scalar
             },
             0,
             WHITE
@@ -49,20 +64,6 @@ void update_platform(Platform& platform) {
 
     // Clear sprites
     platform.sprites.clear();
-
-    // Draw texts
-    for(PlatformText& text : platform.texts) {
-        DrawText(text.text.c_str(), text.x, text.y, text.font_size,
-            ColorFromNormalized(Vector4{ 
-                (float)text.color.r, 
-                (float)text.color.g, 
-                (float)text.color.b, 1.0 
-            })
-        );
-    }
-    
-    // Clear texts
-    platform.texts.clear();
 
     // Play sounds
     for(PlatformSound& sound : platform.sounds) {

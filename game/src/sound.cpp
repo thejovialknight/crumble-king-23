@@ -28,6 +28,10 @@ Sounds load_sounds(Platform& platform) {
 	sounds.music_level1 = new_sound_handle(platform, "resources/sounds/music_level1.wav");
 	sounds.music_level2 = new_sound_handle(platform, "resources/sounds/music_level2.wav");
 	sounds.music_level3 = new_sound_handle(platform, "resources/sounds/music_level3.wav");
+	// Tile crumbles
+	sounds.tile_crumbles.push_back(new_sound_handle(platform, "resources/sounds/tile_crumble_1.wav"));
+	sounds.tile_crumbles.push_back(new_sound_handle(platform, "resources/sounds/tile_crumble_2.wav"));
+	sounds.tile_crumbles.push_back(new_sound_handle(platform, "resources/sounds/tile_crumble_3.wav"));
 
 	return sounds;
 }

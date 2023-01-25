@@ -36,6 +36,7 @@ void populate_settings(const std::string& text, Settings& settings) {
 		if(try_double_field(field, "KING_FLOAT_GRAVITY_LERP_SPEED", settings.float_gravity_lerp_speed)) continue;
 		if(try_double_field(field, "KING_FALL_GRAVITY_SCALE", settings.fall_gravity_scale)) continue;
 		// FOOD
+		if(try_double_field(field, "FOOD_INACTIVE_LENGTH", settings.food_inactive_length)) continue;
 		if(try_double_field(field, "FOOD_COOK_LENGTH", settings.food_cook_length)) continue;
 		if(try_double_field(field, "FOOD_EXPIRATION_LENGTH", settings.food_expiration_length)) continue;
 		if(try_double_field(field, "FOOD_DISTANCE_TO_EAT", settings.food_distance_to_eat)) continue;

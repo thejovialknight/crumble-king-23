@@ -12,23 +12,24 @@ bool AABB(Rect a, Rect b) {
 	return false;
 }
 
-void resolve_king_velocity(King& king, bool tiles[]) {
-	Rect player_collider(Vec2(king.position.x, king.position.y), Vec2(16, 16));
+void resolve_king_velocity(King& king, std::vector<Tile>& tiles, Sounds& sounds, Platform& platform) {
+	Rect player_collider(Vec2(king.position.x, king.position.y - 9), Vec2(16, 16));
 	king.is_grounded = false;
 
 	// Loop through collision checks
-	for (int i = 0; i < ROWS * COLUMNS; ++i) {
-		if (!tiles[i]) {
+	for(Tile& tile : tiles) {
+		if (tile.health <= 0){
 			continue;
 		}
 
-		Vec2 tile_position = tile_position_from_index(tiles, i);
-		Rect tile_collider(Vec2(tile_position.x, tile_position.y), Vec2(16, 16));
+		Rect tile_collider(Vec2(tile.position.x, tile.position.y), Vec2(16, 16));
 
 		Rect player_after_x_movement = player_collider;
 		player_after_x_movement.position.x += king.velocity.x;
+
 		Rect player_after_y_movement = player_collider;
 		player_after_y_movement.position.y += king.velocity.y;
+
 		Rect ground_check_rect = player_collider;
 		ground_check_rect.position.y += 0.75;
 
@@ -37,6 +38,12 @@ void resolve_king_velocity(King& king, bool tiles[]) {
 		}
 
 		if(AABB(player_after_y_movement, tile_collider)) {
+			if (king.velocity.y > 0 && !tile.is_crumbling) {
+				tile.is_crumbling = true;
+				// TODO: Settings for crumble length
+				tile.time_till_crumble = 0.5;
+				buffer_sound(platform, sounds.tile_crumbles[random_int(sounds.tile_crumbles.size())], 1);
+			}
 			king.velocity.y = 0;
 		}
 

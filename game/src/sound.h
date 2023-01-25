@@ -28,6 +28,8 @@ struct Sounds {
 	int music_level1;
 	int music_level2;
 	int music_level3;
+	// Tile crumble
+	std::vector<int> tile_crumbles;
 };
 
 Sounds load_sounds(Platform& platform);

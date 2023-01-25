@@ -4,14 +4,33 @@
 #include "king.h"
 #include "sound.h"
 
-struct Food {
-	Vec2 position = Vec2(0,0);
-	double is_active = false;
-	double time_to_next_phase = 0;
-	Animator animator;
-	std::vector<Vec2> spawn_positions;
-	std::vector<Sequence*> sequences;
+struct Window {
+	Vec2 spawn_position;
+	bool is_active = true;
+
+	Window(Vec2 spawn_position) : spawn_position(spawn_position) {}
 };
 
-void update_food(int& points, Food& food, King& king, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
-void hide_food(Food& food, Settings& settings);
+enum class FoodState {
+	INACTIVE,
+	COOKING,
+	COOKED,
+	POT
+};
+
+struct Food {
+	Vec2 position = Vec2(0,0);
+	FoodState state = FoodState::INACTIVE;
+	double time_to_next_phase = 0;
+	double time_to_alarm = 0;
+	Animator animator;
+	std::vector<Window> windows;
+	std::vector<Sequence*> sequences;
+	Sequence* platter_sequence;
+	Sequence* bubbling_pot_sequence;
+	int current_window;
+	bool level_complete = false;
+};
+
+void update_food(int& score, Food& food, King& king, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
+void hide_food(Food& food, double inactive_length);

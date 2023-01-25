@@ -14,6 +14,17 @@ void iterate_animator(Animator& animator, double delta_time) {
 }
 
 PlatformSprite sprite_from_animator(int atlas, Animator& animator, const Vec2& position) {
+	if(!animator.is_visible) {
+		return PlatformSprite(
+			atlas,
+			IRect(),
+			0,
+			0,
+			0,
+			0,
+			false
+		);
+	}
 	return sprite_from_sequence(atlas, *animator.sequence, animator.frame, position, animator.is_flipped);
 }
 
@@ -68,6 +79,7 @@ void populate_sequences(const std::string text, Sequences& sequences) {
 		if(sequence_name == "GUARD_RUN") { sequences.guard_run = sequence; }
 		if(sequence_name == "GUARD_JUMP") { sequences.guard_jump = sequence; }
 		if(sequence_name == "GUARD_END") { sequences.guard_end = sequence; }
+		if(sequence_name == "WINDOW") { sequences.window = sequence; }
 	}
 }
 

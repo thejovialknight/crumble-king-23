@@ -39,12 +39,13 @@ struct Level {
 
     // "Entitites"
     King king;
-    bool tiles[ROWS * COLUMNS];
     Food food;
+    std::vector<Tile> tiles;
 
     // Data
     LevelData* data;
     Sequence* tile_sequence;
+    Sequence* window_sequence;
 
     Level(LevelData* data, Sequences& sequences, Platform& platform);
 };

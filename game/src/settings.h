@@ -12,6 +12,7 @@ struct Settings {
 	double float_target_gravity_scale;
 	double float_gravity_lerp_speed;
 	double fall_gravity_scale;
+	double food_inactive_length;
 	double food_cook_length;
 	double food_expiration_length;
 	double food_distance_to_eat;

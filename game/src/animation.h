@@ -34,9 +34,11 @@ struct Sequences {
 	Sequence guard_run;
 	Sequence guard_jump;
 	Sequence guard_end;
+	Sequence window;
 };
 
 struct Animator {
+	bool is_visible = true;
 	Sequence* sequence;
 	int frame = 0;
 	double time_till_next_frame = 0;
