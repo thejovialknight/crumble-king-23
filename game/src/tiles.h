@@ -1,8 +1,8 @@
 #pragma once
-#include "vec2.h"
 #include <vector>
 #include <unordered_map>
-#include <unordered_set>
+#include "vec2.h"
+#include "utils.h"
 
 #define COLUMNS 40
 #define ROWS 23

@@ -1,2 +1,12 @@
-﻿  tiles.cpp
+﻿  enemy.cpp
+  game.cpp
+  level.cpp
+C:\Users\thejo\repos\crumble-king-23\game\src\level.cpp(12,77): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\thejo\repos\crumble-king-23\game\src\level.cpp(42,95): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  tower.cpp
+  menu.cpp
+C:\Users\thejo\repos\crumble-king-23\game\src\menu.cpp(9,75): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  raylib_game.cpp
+  tiles.cpp
+  Generating Code...
   crumble-king.vcxproj -> C:\Users\thejo\repos\crumble-king-23\_bin\Debug\crumble-king.exe
