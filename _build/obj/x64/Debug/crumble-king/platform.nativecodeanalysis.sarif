@@ -1,0 +1,83 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.34.31937.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/game/src/platform.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "20dc0ef64d48910ca905899a1daa4767a89b6f04070edbbccc9ef3f01e3e19fd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/game/src/platform.h"
+          },
+          "hashes": {
+            "sha-256": "c7723f8a0911dcccb4945e14989098b7f1c3e497855acdf7a64b306c2f44310a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/raylib.h"
+          },
+          "hashes": {
+            "sha-256": "709b3bd933811e2554a6c387ab7f6e57fc15f4b14483549b076de646f106d218"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/game/src/vec3.h"
+          },
+          "hashes": {
+            "sha-256": "8cf93dd7fcf62af8654de6f3b12828386717795e4281267465f3eb603cf8775f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/game/src/settings.h"
+          },
+          "hashes": {
+            "sha-256": "e1ac2b3967cbcf1199882f69f9f64f40a6bc74008ad3196d9f20b5c5956c1597"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/game/src/rect.h"
+          },
+          "hashes": {
+            "sha-256": "c476bd767afaafa0ab06edbd7fd5bdaaf2288067511a3660ff93e69e2c815c72"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/game/src/vec2.h"
+          },
+          "hashes": {
+            "sha-256": "cb9b7bb50c0e29cef03d415868a0d1f952a9e21b2bd9366c1be76edf04ac3a92"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define DEFAULT_EPSILON 0.001
+
 // Linearly interpolates between two double values by interpolant t. Doesn't modify any values, only returns the result.
 double lerp(double a, double b, double t) {
     if(t < 0) { t = 0; }
@@ -10,13 +12,13 @@ double lerp(double a, double b, double t) {
 }
 
 // Returns true if the values are as close or closer than epsilon.
-bool equals(double a, double b, double epsilon) {
+bool epsilon_equals(double a, double b, double epsilon) {
     return fabs(a - b) < epsilon;
 }
 
 // Returns true if the values are as close or closer than an epsilon value.
-bool equals(double a, double b) {
-    return fabs(a - b) < 0.01;
+bool epsilon_equals(double a, double b) {
+    return fabs(a - b) < DEFAULT_EPSILON;
 }
 
 // Returns true if the values are as close or closer than an epsilon value.

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\raylib-master\src\</FILEPATH>
+      <FILENAME>rshapes.c</FILENAME>
+      <LINE>212</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>DrawLineBezier</FUNCTION>
+    <DECORATED>DrawLineBezier</DECORATED>
+    <FUNCLINE>196</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\raylib-master\src\</FILEPATH>
+      <FILENAME>rshapes.c</FILENAME>
+      <LINE>212</LINE>
+      <COLUMN>38</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>DrawLineBezier</FUNCTION>
+    <DECORATED>DrawLineBezier</DECORATED>
+    <FUNCLINE>196</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\raylib-master\src\</FILEPATH>
+      <FILENAME>rshapes.c</FILENAME>
+      <LINE>257</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>DrawLineBezierQuad</FUNCTION>
+    <DECORATED>DrawLineBezierQuad</DECORATED>
+    <FUNCLINE>234</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\raylib-master\src\</FILEPATH>
+      <FILENAME>rshapes.c</FILENAME>
+      <LINE>257</LINE>
+      <COLUMN>38</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>DrawLineBezierQuad</FUNCTION>
+    <DECORATED>DrawLineBezierQuad</DECORATED>
+    <FUNCLINE>234</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\raylib-master\src\</FILEPATH>
+      <FILENAME>rshapes.c</FILENAME>
+      <LINE>302</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>DrawLineBezierCubic</FUNCTION>
+    <DECORATED>DrawLineBezierCubic</DECORATED>
+    <FUNCLINE>279</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\raylib-master\src\</FILEPATH>
+      <FILENAME>rshapes.c</FILENAME>
+      <LINE>302</LINE>
+      <COLUMN>38</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>DrawLineBezierCubic</FUNCTION>
+    <DECORATED>DrawLineBezierCubic</DECORATED>
+    <FUNCLINE>279</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

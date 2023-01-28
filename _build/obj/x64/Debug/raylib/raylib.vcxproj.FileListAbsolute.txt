@@ -1,0 +1,2 @@
+C:\Users\thejo\repos\crumble-king-23\_bin\Debug\raylib.lib.lastcodeanalysissucceeded
+C:\Users\thejo\repos\crumble-king-23\_build\obj\x64\Debug\raylib\NativeCodeAnalysis.read.1.tlog

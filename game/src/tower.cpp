@@ -40,7 +40,7 @@ void update_tower(Tower& tower, int atlas, Sequences& sequences, Sounds& sounds,
             else {
                 tower.level_index++;
                 tower.level.data = tower.data->levels[tower.level_index];
-                load_level(tower.level, sounds, platform);
+                load_level(tower.level, sequences, sounds, platform);
             }
         }
         else { // if died
@@ -50,7 +50,7 @@ void update_tower(Tower& tower, int atlas, Sequences& sequences, Sounds& sounds,
                 tower.ready_to_exit = true;
             }
             else {
-                load_level(tower.level, sounds, platform);
+                load_level(tower.level, sequences, sounds, platform);
             }
         }
     }

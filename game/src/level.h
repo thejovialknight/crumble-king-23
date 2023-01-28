@@ -6,6 +6,7 @@
 #include "food.h"
 #include "animation.h"
 #include "sound.h"
+#include "enemy.h"
 
 struct LevelData {
     std::string name;
@@ -36,11 +37,13 @@ struct Level {
     double time_to_next_state;
     int score = 0;
     bool ready_to_play_dead_sound = false;
+    SurfaceMap surface_map;
 
     // "Entitites"
     King king;
     Food food;
     std::vector<Tile> tiles;
+    std::vector<Enemy> enemies;
 
     // Data
     LevelData* data;
@@ -50,7 +53,7 @@ struct Level {
     Level(LevelData* data, Sequences& sequences, Platform& platform);
 };
 
-void load_level(Level& level, Sounds& sounds, Platform& platform);
+void load_level(Level& level, Sequences& sequences, Sounds& sounds, Platform& platform);
 void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
 void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
 void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);

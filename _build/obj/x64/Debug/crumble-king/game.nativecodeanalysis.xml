@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\thejo\repos\crumble-king-23\game\src\</FILEPATH>
+      <FILENAME>level.h</FILENAME>
+      <LINE>13</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'LevelData::tilemap' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>LevelData::{ctor}</FUNCTION>
+    <DECORATED>??0LevelData@@QEAA@XZ</DECORATED>
+    <FUNCLINE>13</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>LevelData::tilemap</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

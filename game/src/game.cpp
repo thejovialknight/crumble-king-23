@@ -75,7 +75,7 @@ void update_game(Game& game, Platform& platform, double delta_time) {
                 game.tower = new Tower(&game.towers[0], Level(&game.levels[level_index_to_load], game.sequences, platform));
                 game.tower->level_index = level_index_to_load; // CAREFUL! IN THE FUTURE THIS INDEX WON'T HAVE ANY CORRESPONDENCE TO THE TOWER INDEX
                 game.tower->lives_remaining = 3;
-                load_level(game.tower->level, game.sounds, platform);
+                load_level(game.tower->level, game.sequences, game.sounds, platform);
                 stop_sound(platform, game.sounds.music_menu);
             }
             platform.background_color = Vec3(0, 0, 0);

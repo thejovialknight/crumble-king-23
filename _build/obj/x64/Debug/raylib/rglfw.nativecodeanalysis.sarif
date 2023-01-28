@@ -1,0 +1,283 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C28125",
+          "message": {
+            "text": "The function 'InitializeCriticalSection' must be called from within a try/except block."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_thread.c"
+                },
+                "region": {
+                  "startLine": 76,
+                  "startColumn": 5,
+                  "endLine": 76,
+                  "endColumn": 45
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "_glfwPlatformCreateMutex",
+                  "decoratedName": "_glfwPlatformCreateMutex",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.34.31937.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///C:/Users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_thread.c"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "9caaf61a8e74701c3a441004dfa2dd29fe2f430551e60d5bb6bf611894ffd025"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/rglfw.c"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "ed72fa5ff417226d3e8aaf9f0be20a5da52f89de8b740dcb311746e82e9f4948"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/init.c"
+          },
+          "hashes": {
+            "sha-256": "90b551b4093ff214b19910a3c222679a8e7d2ace6eafff7e750f86e96a4fd7f2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/internal.h"
+          },
+          "hashes": {
+            "sha-256": "0cf0930388f0e7057b859e86be49b0e898093aec804315cb6ff9383c7dbb83e5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/include/glfw/glfw3.h"
+          },
+          "hashes": {
+            "sha-256": "86f666424a2a6666114a418bce31f0151a5f12cff314d82d311d669cb3f57fba"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/platform.h"
+          },
+          "hashes": {
+            "sha-256": "09cc69728639fe6f3c5c7a8e7801b9862c4929964a4ef4fe3d9746636e866bd6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/null_platform.h"
+          },
+          "hashes": {
+            "sha-256": "8ebbe9a537145b6e544818ec5cc49e13cd6c7e11d901c2806667c2a2a2d945a1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_platform.h"
+          },
+          "hashes": {
+            "sha-256": "1f4578c0674b626bec9b1d37b63e60971960a5f93b1785d2672b32d34c2bd5d1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/null_joystick.h"
+          },
+          "hashes": {
+            "sha-256": "ccd7bec0a32632b0fc81d1c085bba3b89e01a9dc4b6b28cde9ea394909fc700d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_joystick.h"
+          },
+          "hashes": {
+            "sha-256": "db8cc8fe158f8f58285830e336ad03c8e31c6a3042a86a74d3f47cdf3865db84"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_thread.h"
+          },
+          "hashes": {
+            "sha-256": "d142b96339b5864f0326dc5dac793c98f825ace4f7eef0bc32d0cdd5528ce1a2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_time.h"
+          },
+          "hashes": {
+            "sha-256": "ec16d5c07f36b51f59c16ed8660d7438c20055dfdb698d59054825e744026ff0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/platform.c"
+          },
+          "hashes": {
+            "sha-256": "ef4a069bee5ffe928dbed113f56d89eeffd479429a95417f023ac8af8fe1ba7b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/context.c"
+          },
+          "hashes": {
+            "sha-256": "88202795ea3b78170a4d98b50e4ab2ec6787dd777176efcb7c3f1fdecb9ca2d3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/monitor.c"
+          },
+          "hashes": {
+            "sha-256": "12e635165904fd2cbccaa1e0f938b19cd7ab2a54c2b61244c342f3af411f9022"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/window.c"
+          },
+          "hashes": {
+            "sha-256": "b5b6d79ea7b263a0954047ab6226a5cef734cb0e64bb4e14e6ec94013a9d2091"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/input.c"
+          },
+          "hashes": {
+            "sha-256": "04b317350325d228baae9414a291baae3dc31c72f02b3d3a8d4581a7f7609565"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/mappings.h"
+          },
+          "hashes": {
+            "sha-256": "67c336764cfe4b8cae2229355e38f6eab657e52503b210086600eb772ee1f1bd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/vulkan.c"
+          },
+          "hashes": {
+            "sha-256": "a544c192b3a441286e011f6a829ec3c5fdbfc3f86ea6a742eddb2ee92d409264"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_init.c"
+          },
+          "hashes": {
+            "sha-256": "f07befb243b23451ae9aac25112da1bb4cef90b079b317534b53b1d763c85a14"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_module.c"
+          },
+          "hashes": {
+            "sha-256": "9b47c72d206861ae3110e6ee9bc59aac8070a6ada34c8025aa2410ac21e53969"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_monitor.c"
+          },
+          "hashes": {
+            "sha-256": "53e0e2eadca62cef897ad9ce68e61b0b9baf6b2519da38b40ff5865724a7f8fc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_window.c"
+          },
+          "hashes": {
+            "sha-256": "735be095ab160825819963c3132891dac35332824792f9161804c5a344e5eaee"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_joystick.c"
+          },
+          "hashes": {
+            "sha-256": "6a3236eccc1e94b70155c676b8367334fb0dbe7fde58aabaf7644ac473fe44b1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/win32_time.c"
+          },
+          "hashes": {
+            "sha-256": "04d1a7a13143398f861bb7cb0a051196b5ccd535aa34c0e909c9e3bbc5123269"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/wgl_context.c"
+          },
+          "hashes": {
+            "sha-256": "aa75905d38f4ceb9182728778d0b03506556ed6a1400adeff3272a74f849c60c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/egl_context.c"
+          },
+          "hashes": {
+            "sha-256": "388ac18354682d21f6266d3e73df4aef176c5fdbf0a3976d800a90631b94ab79"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/thejo/repos/crumble-king-23/raylib-master/src/external/glfw/src/osmesa_context.c"
+          },
+          "hashes": {
+            "sha-256": "ee79e8f470eca9433da0c0a5ee09249e60be4db8bdaaa5e535738b2f437f8618"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -13,20 +13,26 @@ Level::Level(LevelData* data, Sequences& sequences, Platform& platform) : data(d
     tile_sequence = &sequences.tile_center;
     window_sequence = &sequences.window;
     king.animator.sequence = &sequences.king_idle;
+    
 }
 
-void load_level(Level& level, Sounds& sounds, Platform& platform) {
+void load_level(Level& level, Sequences& sequences, Sounds& sounds, Platform& platform) {
     level.tiles.clear();
     level.food.windows.clear();
+    level.enemies.clear();
     // Populate tiles from tilemap
     int i = 0;
     for (const char c : level.data->tilemap) {
         if (c == '\n') { continue; }
         if (c == 'K') { level.king.position = grid_position_from_index(i); }
         if (c == 'F') { level.food.windows.emplace_back(Window(grid_position_from_index(i))); }
+        //if (c == 'E') { level.enemies.emplace_back(Enemy(grid_position_from_index(i))); }
         if (c == '#') { level.tiles.emplace_back(grid_position_from_index(i)); }
         i++;
     }
+    
+    level.surface_map = get_surface_map(level.tiles);
+    int k = 2;
 
     // Initialize data
     level.score = 0;
@@ -37,6 +43,7 @@ void load_level(Level& level, Sounds& sounds, Platform& platform) {
     level.king.velocity = Vec2(0, 0);
     level.king.jump_state = JumpState::GROUND;
     level.king.acceleration_mod = 1;
+    level.king.animator.sequence = &sequences.king_idle;
     // Initiate pre level
     level.state = LevelState::PRE;
     level.time_to_next_state = 2;
@@ -70,13 +77,13 @@ void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds,
 
 void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time) {
     platform.background_color = Vec3(0, 0, 0);
-    // Level logic
     update_king(level.king, platform, sequences, sounds, settings, delta_time);
     resolve_king_velocity(level.king, level.tiles, sounds, platform);
     update_food(level.score, level.food, level.king, sounds, platform, settings, delta_time);
     update_tiles(level.tiles, delta_time);
+    update_enemies(level.enemies, level.king, sequences, delta_time);
 
-    if(is_king_dead(level.king, platform)) {
+    if(is_king_dead(level.king, platform) || is_king_caught(level.enemies, level.king)) {
         level.ready_to_play_dead_sound = true;
         platform.background_color = Vec3(0.5, 0, 0);
         goto_post_level(level, PostLevelBehavior::RESTART);
@@ -95,14 +102,26 @@ void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sou
         buffer_sound(platform, music_from_level_name(level.data->name, sounds), 1);
         level.state = LevelState::ACTIVE;
     }
+
+    for (Enemy& enemy : level.enemies) {
+        enemy.animator.sequence = &sequences.guard_idle;
+    }
 }
 
 void handle_post_level(Level& level, int atlas, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
     const double level_complete_float_speed = 300; // TODO: Settings!
 
-    level.king.position.y -= level_complete_float_speed * delta_time;
+    // TODO: None of this advance bullshit, wait for the level state refactor
+    if (level.post_level_info.behavior == PostLevelBehavior::ADVANCE) {
+        level.king.position.y -= level_complete_float_speed * delta_time;
+        level.time_to_next_state -= delta_time;
+        if (level.time_to_next_state <= 0 || platform.input.jump.just_pressed) {
+            level.post_level_info.ready_to_exit = true;
+        }
+    }
+
     level.time_to_next_state -= delta_time;
-    if(level.time_to_next_state <= 0 || platform.input.jump.just_pressed) {
+    if (level.time_to_next_state <= 0 || platform.input.jump.just_pressed) {
         level.post_level_info.ready_to_exit = true;
     }
 } 
@@ -139,6 +158,14 @@ void render_level(Level& level, int atlas, Platform& platform) {
             visible_health,
             tile.position,
             false // TODO: is_flipped could be randomized? Hmm, probably not.
+        ));
+    }
+    // Draw enemies
+    for(Enemy& enemy : level.enemies) {
+        put_sprite(platform, sprite_from_animator(
+            atlas,
+            enemy.animator,
+            enemy.position
         ));
     }
     // Draw king

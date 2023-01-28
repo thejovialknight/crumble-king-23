@@ -1,6 +1,6 @@
 #include "collision.h"
 
-bool AABB(Rect a, Rect b) {
+bool is_colliding(Rect a, Rect b) {
 	if (a.position.x < b.position.x + b.size.x &&
 		a.position.x + a.size.x > b.position.x &&
 		a.position.y < b.position.y + b.size.y &&
@@ -33,11 +33,11 @@ void resolve_king_velocity(King& king, std::vector<Tile>& tiles, Sounds& sounds,
 		Rect ground_check_rect = player_collider;
 		ground_check_rect.position.y += 0.75;
 
-		if(AABB(player_after_x_movement, tile_collider)) {
+		if(is_colliding(player_after_x_movement, tile_collider)) {
 			king.velocity.x = 0;
 		}
 
-		if(AABB(player_after_y_movement, tile_collider)) {
+		if(is_colliding(player_after_y_movement, tile_collider)) {
 			if (king.velocity.y > 0 && !tile.is_crumbling) {
 				tile.is_crumbling = true;
 				// TODO: Settings for crumble length
@@ -47,7 +47,7 @@ void resolve_king_velocity(King& king, std::vector<Tile>& tiles, Sounds& sounds,
 			king.velocity.y = 0;
 		}
 
-		if(king.velocity.y >= 0 && AABB(ground_check_rect, tile_collider)) {
+		if(king.velocity.y >= 0 && is_colliding(ground_check_rect, tile_collider)) {
 			king.is_grounded = true;
 		}
 	}
@@ -55,3 +55,5 @@ void resolve_king_velocity(King& king, std::vector<Tile>& tiles, Sounds& sounds,
 	king.position.x += king.velocity.x;
 	king.position.y += king.velocity.y;
 }
+
+
