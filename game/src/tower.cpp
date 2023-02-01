@@ -1,6 +1,7 @@
 #include "tower.h"
 
-void update_tower(Tower& tower, int atlas, Sequences& sequences, Sounds& sounds, Settings& settings, Platform& platform, double delta_time) {
+void update_tower(Tower& tower, int atlas, Sequences& sequences, Sounds& sounds, Settings& settings, Platform& platform, double delta_time)
+{
     update_level(tower.level, atlas, sequences, sounds, platform, settings, delta_time);
     platform.texts.emplace_back(PlatformText(
         "Lives: " + std::to_string(tower.lives_remaining),
@@ -17,8 +18,7 @@ void update_tower(Tower& tower, int atlas, Sequences& sequences, Sounds& sounds,
         tower.level.ready_to_play_dead_sound = false;
         if(tower.lives_remaining <= 0) {
             buffer_sound(platform, sounds.lost_game, 1);
-        }
-        else {
+        } else {
             buffer_sound(platform, sounds.lost_life, 1);
         }
     }
@@ -28,30 +28,27 @@ void update_tower(Tower& tower, int atlas, Sequences& sequences, Sounds& sounds,
         stop_sound(platform, sounds.music_victory);
         stop_sound(platform, music_from_level_name(tower.level.data->name, sounds));
         tower.ready_to_exit = true;
-    }
-    else if(tower.level.post_level_info.ready_to_exit) {
+    } else if(tower.level.post_level_info.ready_to_exit) {
         stop_sound(platform, music_from_level_name(tower.level.data->name, sounds));
         tower.total_score += tower.level.score;
         if(tower.level.post_level_info.behavior == PostLevelBehavior::ADVANCE) { // if won
             if(tower.level_index >= tower.data->levels.size() - 1) {
                 stop_sound(platform, sounds.music_victory);
                 tower.ready_to_exit = true;
-            }
-            else {
+            } else {
                 tower.level_index++;
                 tower.level.data = tower.data->levels[tower.level_index];
                 load_level(tower.level, sequences, sounds, platform);
             }
-        }
-        else { // if died
+        } else { // if died
             platform.background_color = Vec3(0, 0, 0);
             tower.lives_remaining -= 1;
             if(tower.lives_remaining < 0) {
                 tower.ready_to_exit = true;
-            }
-            else {
+            } else {
                 load_level(tower.level, sequences, sounds, platform);
             }
         }
     }
 }
+

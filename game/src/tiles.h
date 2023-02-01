@@ -24,7 +24,7 @@ struct Surface {
 
 struct SurfaceMap {
 	std::vector<Surface> surfaces;
-	std::unordered_map<int, Surface*> tile_surface_map;
+	std::unordered_map<int, int> tile_surface_indices;
 	//std::unordered_map<IVec2, Surface*, IVec2Hasher> tile_surface_map; 
 };
 

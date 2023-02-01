@@ -1,6 +1,7 @@
 #include "game.h"
 
-void init_game(Game& game, Platform& platform) {
+void init_game(Game& game, Platform& platform)
+{
     game.sounds = load_sounds(platform);
     buffer_sound(platform, game.sounds.music_menu, 1);
 
@@ -23,9 +24,7 @@ void init_game(Game& game, Platform& platform) {
         if(level_str[i] == '@') {
             i++;
             // If this is the first level in string
-            if(length != start) {
-                game.levels.push_back(level_data);
-            }
+            if(length != start) { game.levels.push_back(level_data); }
 
             // Get title
             const int max_title_length = 50;
@@ -37,9 +36,9 @@ void init_game(Game& game, Platform& platform) {
             }
             start = i + 1;
             length = 0;
-        }
-        else {
+        } else {
             if (level_str[i] == '\n') { continue; }
+
             level_data.tilemap[length] = level_str[i];
             length++;
         }
@@ -55,47 +54,49 @@ void init_game(Game& game, Platform& platform) {
     game.towers.push_back(tower);
 }
 
-void update_game(Game& game, Platform& platform, double delta_time) {
+void update_game(Game& game, Platform& platform, double delta_time)
+{
     // TODO: On function key or something. This is a bit slow every frame, obviously.
     populate_settings(get_file_text("resources/config/config.txt"), game.settings);
 
     switch(game.state) {
-        case GameState::MENU :
-            update_main_menu(*game.menu, game.levels, game.high_scores, game.sounds, platform);
-            if (game.menu->should_reset_data) {
-                reset_data(game, platform);
-                game.menu->should_reset_data = false;
-            }
+    case GameState::MENU :
+        update_main_menu(*game.menu, game.levels, game.high_scores, game.sounds, platform);
+        if (game.menu->should_reset_data) {
+            reset_data(game, platform);
+            game.menu->should_reset_data = false;
+        }
 
-            if(game.menu->ready_to_load_level && game.menu->level_index_to_load < game.levels.size()) {
-                int level_index_to_load = game.menu->level_index_to_load;
-                delete game.menu;
-                game.state = GameState::TOWER;
-                // Hardcoded tower at index 0. TODO: Implement from tower pipeline
-                game.tower = new Tower(&game.towers[0], Level(&game.levels[level_index_to_load], game.sequences, platform));
-                game.tower->level_index = level_index_to_load; // CAREFUL! IN THE FUTURE THIS INDEX WON'T HAVE ANY CORRESPONDENCE TO THE TOWER INDEX
-                game.tower->lives_remaining = 3;
-                load_level(game.tower->level, game.sequences, game.sounds, platform);
-                stop_sound(platform, game.sounds.music_menu);
-            }
-            platform.background_color = Vec3(0, 0, 0);
-            break;
-        case GameState::TOWER :
-            update_tower(*game.tower, game.atlas, game.sequences, game.sounds, game.settings, platform, delta_time);
-            if(game.tower->ready_to_exit) {
-                // TODO: Should we ALWAYS push back score? What about when we just quit?
-                add_high_score(game.high_scores, game.tower->total_score);
-                write_high_scores(game.high_scores, platform);
-                buffer_sound(platform, game.sounds.music_menu, 1);
-                return_to_menu(game);
-            }
-            break;
-        default :
-            break;
+        if(game.menu->ready_to_load_level && game.menu->level_index_to_load < game.levels.size()) {
+            int level_index_to_load = game.menu->level_index_to_load;
+            delete game.menu;
+            game.state = GameState::TOWER;
+            // Hardcoded tower at index 0. TODO: Implement from tower pipeline
+            game.tower = new Tower(&game.towers[0], Level(&game.levels[level_index_to_load], game.sequences, platform));
+            game.tower->level_index = level_index_to_load; // CAREFUL! IN THE FUTURE THIS INDEX WON'T HAVE ANY CORRESPONDENCE TO THE TOWER INDEX
+            game.tower->lives_remaining = 3;
+            load_level(game.tower->level, game.sequences, game.sounds, platform);
+            stop_sound(platform, game.sounds.music_menu);
+        }
+        platform.background_color = Vec3(0, 0, 0);
+        break;
+    case GameState::TOWER :
+        update_tower(*game.tower, game.atlas, game.sequences, game.sounds, game.settings, platform, delta_time);
+        if(game.tower->ready_to_exit) {
+            // TODO: Should we ALWAYS push back score? What about when we just quit?
+            add_high_score(game.high_scores, game.tower->total_score);
+            write_high_scores(game.high_scores, platform);
+            buffer_sound(platform, game.sounds.music_menu, 1);
+            return_to_menu(game);
+        }
+        break;
+    default :
+        break;
     }
 }
 
-void return_to_menu(Game& game) {
+void return_to_menu(Game& game)
+{
     delete game.tower;
     game.state = GameState::MENU;
     game.menu = new MainMenu();
@@ -103,7 +104,8 @@ void return_to_menu(Game& game) {
     populate_level_select_menu(game.menu->list, game.levels);
 }
 
-void reset_data(Game& game, Platform& platform) {
+void reset_data(Game& game, Platform& platform)
+{
     game.high_scores.clear();
     write_high_scores(game.high_scores, platform);
     //SaveFileText("resources/save/scores.txt", "0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n");

@@ -1,6 +1,7 @@
 #include "sound.h"
 
-Sounds load_sounds(Platform& platform) {
+Sounds load_sounds(Platform& platform)
+{
 	Sounds sounds;
 	// Menu
 	sounds.menu_move = new_sound_handle(platform, "resources/sounds/menu_move.wav");

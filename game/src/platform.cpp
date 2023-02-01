@@ -1,6 +1,7 @@
 #include "platform.h"
 
-void init_platform(Platform& platform) {
+void init_platform(Platform& platform)
+{
     platform.actual_width = 1920;
     platform.actual_height = 1080;
     platform.logical_width = 640;
@@ -11,7 +12,8 @@ void init_platform(Platform& platform) {
     SetTargetFPS(60);
 }
 
-void update_platform(Platform& platform) {
+void update_platform(Platform& platform)
+{
     // Draw sprites 
     BeginDrawing();
     ClearBackground(ColorFromNormalized(Vector4{ 
@@ -27,7 +29,7 @@ void update_platform(Platform& platform) {
                 (float)text.color.r,
                 (float)text.color.g,
                 (float)text.color.b, 1.0
-                })
+            })
         );
     }
 
@@ -87,40 +89,48 @@ void update_platform(Platform& platform) {
     }
 }
 
-void deinit_platform() {
+void deinit_platform()
+{
     CloseWindow();
 }
 
-void query_button(PlatformButton& button) {
+void query_button(PlatformButton& button)
+{
     button.held = IsKeyDown(button.keycode);
     button.just_pressed = IsKeyPressed(button.keycode);
     button.released = IsKeyReleased(button.keycode);
 }
 
-const char* get_file_text(const char* fname) {
+const char* get_file_text(const char* fname)
+{
     return LoadFileText(fname);
 }
 
-int new_texture_handle(Platform& platform, const char* fname) {
+int new_texture_handle(Platform& platform, const char* fname)
+{
     Texture2D texture_asset = LoadTexture(fname);
     platform.texture_assets.emplace_back(texture_asset);
     return platform.texture_assets.size() - 1;
 }
 
-int new_sound_handle(Platform& platform, const char* fname) {
+int new_sound_handle(Platform& platform, const char* fname)
+{
     Sound sound_asset = LoadSound(fname);
     platform.sound_assets.emplace_back(sound_asset);
     return platform.sound_assets.size() - 1;
 }
 
-void put_sprite(Platform& platform, PlatformSprite sprite) {
+void put_sprite(Platform& platform, PlatformSprite sprite)
+{
     platform.sprites.push_back(sprite);
 }
 
-void buffer_sound(Platform& platform, int handle, double volume) {
+void buffer_sound(Platform& platform, int handle, double volume)
+{
     platform.sounds.push_back(PlatformSound(handle, volume));
 }
 
-void stop_sound(Platform& platform, int handle) {
+void stop_sound(Platform& platform, int handle)
+{
     StopSound(platform.sound_assets[handle]);
 }

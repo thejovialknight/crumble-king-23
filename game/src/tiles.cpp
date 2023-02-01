@@ -1,6 +1,7 @@
 #include "tiles.h"
 
-Vec2 grid_position_from_index(int i) {
+Vec2 grid_position_from_index(int i)
+{
     Vec2 position;
     int grid_y = (i / COLUMNS);
     position.y = grid_y * 16;
@@ -8,11 +9,13 @@ Vec2 grid_position_from_index(int i) {
     return position;
 }
 
-void put_tile(bool tiles[], int x, int y) {
+void put_tile(bool tiles[], int x, int y)
+{
     tiles[y * COLUMNS + x] = true;
 }
 
-void update_tiles(std::vector<Tile>& tiles, double delta_time) {
+void update_tiles(std::vector<Tile>& tiles, double delta_time)
+{
     for(Tile& tile : tiles) {
         if(tile.is_crumbling) {
             tile.time_till_crumble -= delta_time;
@@ -25,14 +28,16 @@ void update_tiles(std::vector<Tile>& tiles, double delta_time) {
 }
 
 // TODO: Hash function eventually for speed.
-SurfaceMap get_surface_map(std::vector<Tile>& tiles) {
+SurfaceMap get_surface_map(std::vector<Tile>& tiles)
+{
 	SurfaceMap surface_map;
 	std::vector<Surface>& surfaces = surface_map.surfaces;
-	std::unordered_map<int, Surface*>& tile_surface_map = surface_map.tile_surface_map;
+	std::unordered_map<int, int>& tile_surface_map = surface_map.tile_surface_indices;
 	std::vector<int> already_traversed_tiles;
 	// Associate tiles with surfaces
 	for(int i = 0; i < tiles.size(); ++i) {
-		// Check if already traversed
+		// Check if already traversed or zero health
+		if(tiles[i].health <= 0) { continue; }
 		bool already_traversed = false;
 		for(int j = 0; j < already_traversed_tiles.size(); ++j) {
 			if(i == already_traversed_tiles[j]) {
@@ -42,20 +47,20 @@ SurfaceMap get_surface_map(std::vector<Tile>& tiles) {
 		}
 		if(already_traversed) { continue; }
 
-		// If not already traversed, carry on!
+		// If not already traversed or zero health, carry on!
 		surfaces.push_back(Surface());
-		Surface* surface = &surfaces[surfaces.size() - 1];
+		int surface_index = surfaces.size() - 1;
 
-		tile_surface_map.insert({i, surface});
+		tile_surface_map.insert({i, surface_index});
 		already_traversed_tiles.push_back(i);
 		// Look left
 		Vec2 check_position = tiles[i].position;
 		// TODO: Initial fencepost necessitates function
-		tile_surface_map.insert({i, surface});
+		tile_surface_map.insert({i, surface_index});
 		already_traversed_tiles.push_back(i);
 
 		// TODO: Get rid of this later! ONLY FOR TEST RUN
-		surface->left_edge_tile = i;
+		surfaces[surface_index].left_edge_tile = i;
 		int current_tile = i;
 		bool found_tile = true;
 		/*
@@ -91,7 +96,8 @@ SurfaceMap get_surface_map(std::vector<Tile>& tiles) {
 			found_tile = false;
 			check_position.x += 16;
 			for (int j = 0; j < tiles.size(); ++j) {
-				// This should be a function too. Check if already traversed.
+				// This should be a function too. Check if already traversed or zero health.
+				if(tiles[j].health <= 0) { continue; }
 				bool already_traversed = false;
 				for (int k = 0; k < already_traversed_tiles.size(); ++k) {
 					if (j == already_traversed_tiles[k]) {
@@ -103,7 +109,7 @@ SurfaceMap get_surface_map(std::vector<Tile>& tiles) {
 
 				// Check if tile is at position
 				if (tiles[j].position == check_position) {
-					tile_surface_map.insert({ j, surface });
+					tile_surface_map.insert({ j, surface_index });
 					already_traversed_tiles.push_back(j);
 					current_tile = j;
 					found_tile = true;
@@ -111,7 +117,7 @@ SurfaceMap get_surface_map(std::vector<Tile>& tiles) {
 				}
 			}
 		}
-		surface->right_edge_tile = current_tile;
+		surfaces[surface_index].right_edge_tile = current_tile;
 	}
 	return surface_map;
 }
@@ -124,17 +130,17 @@ SurfaceMap get_surface_map(std::vector<Tile>& tiles) {
 	std::unordered_set<IVec2, IVec2Hasher> tile_set;
 	// Get all tile positions accounted for
 	for (const Tile& tile : tiles) {
-		tile_set.insert(ivec2_from_vec2(tile.position));
-		//tile_surface_map.insert({ivec2_from_vec2(tile.position), nullptr});
+		if(tile.health > 0) {
+			tile_set.insert(ivec2_from_vec2(tile.position));
+			//tile_surface_map.insert({ivec2_from_vec2(tile.position), nullptr});
+		}
 	}
 
 	// Associate tiles with surfaces
 	for (const Tile& tile : tiles) {
+		if(tile.health <= 0) { continue; }
 		IVec2 tile_position = ivec2_from_vec2(tile.position);
-		//if(tile_surface_map.count(tile_position) != 0) {
-		if (tile_set.count(tile_position)) {
-			continue;
-		}
+		if (tile_set.count(tile_position)) { continue; }
 		surfaces.push_back(Surface());
 		Surface* surface = &surfaces[surfaces.size() - 1];
 		tile_surface_map.insert({ tile_position, surface });

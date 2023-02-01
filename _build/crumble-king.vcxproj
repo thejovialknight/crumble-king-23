@@ -176,6 +176,7 @@
     <ClInclude Include="..\game\src\game.h" />
     <ClInclude Include="..\game\src\game_state.h" />
     <ClInclude Include="..\game\src\high_scores.h" />
+    <ClInclude Include="..\game\src\hitch.h" />
     <ClInclude Include="..\game\src\king.h" />
     <ClInclude Include="..\game\src\level.h" />
     <ClInclude Include="..\game\src\sound.h" />

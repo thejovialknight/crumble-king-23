@@ -1,6 +1,7 @@
 #include "animation.h"
 
-void iterate_animator(Animator& animator, double delta_time) {
+void iterate_animator(Animator& animator, double delta_time)
+{
 	animator.time_till_next_frame -= delta_time;
 	if (animator.time_till_next_frame <= 0) {
 		animator.time_till_next_frame = animator.frame_length;
@@ -13,7 +14,8 @@ void iterate_animator(Animator& animator, double delta_time) {
 	}
 }
 
-PlatformSprite sprite_from_animator(int atlas, Animator& animator, const Vec2& position) {
+PlatformSprite sprite_from_animator(int atlas, Animator& animator, const Vec2& position)
+{
 	if(!animator.is_visible) {
 		return PlatformSprite(
 			atlas,
@@ -28,7 +30,8 @@ PlatformSprite sprite_from_animator(int atlas, Animator& animator, const Vec2& p
 	return sprite_from_sequence(atlas, *animator.sequence, animator.frame, position, animator.is_flipped);
 }
 
-PlatformSprite sprite_from_sequence(int atlas, const Sequence& sequence, int frame, const Vec2& position, bool is_flipped) {
+PlatformSprite sprite_from_sequence(int atlas, const Sequence& sequence, int frame, const Vec2& position, bool is_flipped)
+{
 	return PlatformSprite(
 		atlas,
 		sequence.frames[frame],
@@ -40,7 +43,8 @@ PlatformSprite sprite_from_sequence(int atlas, const Sequence& sequence, int fra
 	);
 }
 
-void populate_sequences(const std::string text, Sequences& sequences) {
+void populate_sequences(const std::string text, Sequences& sequences)
+{
 	for(int i = 0; i < text.length(); ++i) {
 		if(!try_iterate_past_char('@', text, i)) break;
 		std::string sequence_name = pull_string_before_char(',', text, i);

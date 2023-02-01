@@ -1,7 +1,8 @@
 #include "settings.h"
 
 // Takes a string and 
-void populate_settings(const std::string& text, Settings& settings) {
+void populate_settings(const std::string& text, Settings& settings)
+{
 	// Loop through entire settings string, populating fields as we go
 	for(int i = 0; i < text.length(); ++i) {
 		// Skip to next key
@@ -11,12 +12,14 @@ void populate_settings(const std::string& text, Settings& settings) {
 		i++; // Skip '#' char
 
 		SettingsField field;
+
 		// Get key
 		while(text[i] != '=') {
 			field.key += text[i];
 			i++;
 		}
 		i++; // Skip '=' char
+
 		// Get value
 		while(text[i] != '\n' && text[i] != '\0') {
 			field.value += text[i];
@@ -45,7 +48,8 @@ void populate_settings(const std::string& text, Settings& settings) {
 	}
 }
 
-bool try_field(const SettingsField& field, const std::string expected_key, std::string& out_value) {
+bool try_field(const SettingsField& field, const std::string expected_key, std::string& out_value)
+{
 	if (field.key == expected_key) {
 		out_value = field.value;
 		return true;
@@ -53,7 +57,8 @@ bool try_field(const SettingsField& field, const std::string expected_key, std::
 	return false;
 }
 
-bool try_int_field(const SettingsField& field, const std::string expected_key, int& out_value) {
+bool try_int_field(const SettingsField& field, const std::string expected_key, int& out_value)
+{
 	std::string str_out;
 	if (try_field(field, expected_key, str_out)) {
 		out_value = stoi(str_out);
@@ -62,7 +67,8 @@ bool try_int_field(const SettingsField& field, const std::string expected_key, i
 	return false;
 }
 
-bool try_double_field(const SettingsField& field, const std::string expected_key, double& out_value) {
+bool try_double_field(const SettingsField& field, const std::string expected_key, double& out_value)
+{
 	std::string str_out;
 	if (try_field(field, expected_key, str_out)) {
 		out_value = stod(str_out);
@@ -70,3 +76,4 @@ bool try_double_field(const SettingsField& field, const std::string expected_key
 	}
 	return false;
 }
+

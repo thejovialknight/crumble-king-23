@@ -1,7 +1,8 @@
 #include "level.h"
 #include <iostream>
 
-Level::Level(LevelData* data, Sequences& sequences, Platform& platform) : data(data) {
+Level::Level(LevelData* data, Sequences& sequences, Platform& platform) : data(data)
+{
     // Initialize state
     food.sequences.push_back(&sequences.food_chicken);
     food.sequences.push_back(&sequences.food_grape);
@@ -16,7 +17,8 @@ Level::Level(LevelData* data, Sequences& sequences, Platform& platform) : data(d
     
 }
 
-void load_level(Level& level, Sequences& sequences, Sounds& sounds, Platform& platform) {
+void load_level(Level& level, Sequences& sequences, Sounds& sounds, Platform& platform)
+{
     level.tiles.clear();
     level.food.windows.clear();
     level.enemies.clear();
@@ -49,8 +51,7 @@ void load_level(Level& level, Sequences& sequences, Sounds& sounds, Platform& pl
         enemy.velocity = Vec2(0, 0);
         if(random_int(2) == 0) {
             enemy.stored_x_direction = 1;
-        }
-        else {
+        } else {
             enemy.stored_x_direction = -1;
         }
     }
@@ -63,17 +64,21 @@ void load_level(Level& level, Sequences& sequences, Sounds& sounds, Platform& pl
     stop_sound(platform, sounds.music_victory);
 }
 
-void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time) {
+void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time)
+{
     switch(level.state) {
-        case LevelState::PRE:
-            handle_pre_level(level, atlas, sequences, sounds, platform, settings, delta_time);
-            break;
-        case LevelState::ACTIVE:
-            handle_active_level(level, atlas, sequences, sounds, platform, settings, delta_time);
-            break;
-        case LevelState::POST:
-            handle_post_level(level, atlas, sequences, platform, settings, delta_time);
-            break;
+    case LevelState::PRE:
+        handle_pre_level(level, atlas, sequences, sounds, platform, settings, delta_time);
+        break;
+    case LevelState::ACTIVE:
+        handle_active_level(level, atlas, sequences, sounds, platform, settings, delta_time);
+        break;
+    case LevelState::POST:
+        handle_post_level(level, atlas, sequences, platform, settings, delta_time);
+        break;
+    case LevelState::HITCH:
+        handle_hitch_level(level, settings, delta_time);
+        break;
     }
     
     // Menu on escape
@@ -85,12 +90,20 @@ void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds,
     render_level(level, atlas, platform);
 }
 
-void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time) {
+void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time)
+{
     platform.background_color = Vec3(0, 0, 0);
     level.surface_map = get_surface_map(level.tiles);
     update_king(level.king, platform, sequences, sounds, settings, delta_time);
-    resolve_king_velocity(level.king, level.tiles, sounds, platform);
-    update_food(level.score, level.food, level.king, sounds, platform, settings, delta_time);
+    resolve_king_velocity(level.king, level.tiles, sounds, platform, delta_time);
+
+    HitchInfo hitch(false, 0);
+    update_food(level.score, level.food, level.king, sounds, platform, settings, hitch, delta_time);
+    if(hitch.should_hitch == true) {
+        level.state = LevelState::HITCH;
+        level.time_to_next_state = hitch.length;
+    }
+
     update_tiles(level.tiles, delta_time);
     update_enemies(level.enemies, level.king, level.tiles, level.surface_map, sequences, delta_time);
 
@@ -98,15 +111,15 @@ void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& 
         level.ready_to_play_dead_sound = true;
         platform.background_color = Vec3(0.5, 0, 0);
         goto_post_level(level, PostLevelBehavior::RESTART);
-    }
-    else if(level.food.level_complete) {
+    } else if(level.food.level_complete) {
         stop_sound(platform, music_from_level_name(level.data->name, sounds));
         buffer_sound(platform, sounds.music_victory, 1);
         goto_post_level(level, PostLevelBehavior::ADVANCE);
     }
 }
 
-void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time) {  
+void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time)
+{
     platform.background_color = Vec3(0, 0, 0);
     level.time_to_next_state -= delta_time;
     if(level.time_to_next_state <= 0 || platform.input.jump.just_pressed) {
@@ -114,13 +127,20 @@ void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sou
         level.state = LevelState::ACTIVE;
     }
 
-    for (Enemy& enemy : level.enemies) {
+    for(Enemy& enemy : level.enemies) {
         enemy.animator.sequence = &sequences.guard_idle;
     }
 }
 
-void handle_post_level(Level& level, int atlas, Sequences& sequences, Platform& platform, Settings& settings, double delta_time) {
+void handle_post_level(Level& level, int atlas, Sequences& sequences, Platform& platform, Settings& settings, double delta_time)
+{
     const double level_complete_float_speed = 300; // TODO: Settings!
+
+    for (Enemy& enemy : level.enemies) {
+        enemy.animator.sequence = &sequences.guard_end;
+        enemy.animator.frame_length = 0.2;
+        iterate_animator(enemy.animator, delta_time);
+    }
 
     // TODO: None of this advance bullshit, wait for the level state refactor
     if (level.post_level_info.behavior == PostLevelBehavior::ADVANCE) {
@@ -137,7 +157,17 @@ void handle_post_level(Level& level, int atlas, Sequences& sequences, Platform& 
     }
 } 
 
-void render_level(Level& level, int atlas, Platform& platform) {
+void handle_hitch_level(Level& level, Settings& settings, double delta_time) {
+    update_food_reset(level.food, settings, delta_time);
+
+    level.time_to_next_state -= delta_time;
+    if(level.time_to_next_state <= 0) {
+        level.state = LevelState::ACTIVE;
+    }
+}
+
+void render_level(Level& level, int atlas, Platform& platform)
+{
     // Draw windows
     for(const Window& window : level.food.windows) {
         int frame = 0;
@@ -161,8 +191,10 @@ void render_level(Level& level, int atlas, Platform& platform) {
     // Draw tiles
     for (const Tile& tile : level.tiles) {
         int visible_health = tile.health;
+
         if (tile.is_crumbling) { visible_health--; }
         if (visible_health <= 0) { continue; }
+
         put_sprite(platform, sprite_from_sequence(
             atlas,
             *level.tile_sequence,
@@ -195,7 +227,8 @@ void render_level(Level& level, int atlas, Platform& platform) {
     ));
 }
 
-void goto_post_level(Level& level, PostLevelBehavior behavior) {
+void goto_post_level(Level& level, PostLevelBehavior behavior)
+{
     level.time_to_next_state = 3;
     if(behavior == PostLevelBehavior::ADVANCE) {
         // TODO: lol
@@ -205,14 +238,13 @@ void goto_post_level(Level& level, PostLevelBehavior behavior) {
     level.post_level_info.behavior = behavior;
 }
 
-int music_from_level_name(std::string& name, Sounds& sounds) {
+int music_from_level_name(std::string& name, Sounds& sounds)
+{
     if(name == "Archipelago") {
         return sounds.music_level1;
-    }
-    if(name == "Out of the Frying Pan...") {
+    } else if(name == "Out of the Frying Pan...") {
         return sounds.music_level2;
-    }
-    if(name == "Xavier's Cave") {
+    } else if(name == "Xavier's Cave") {
         return sounds.music_level3;
     }
     return sounds.music_menu;

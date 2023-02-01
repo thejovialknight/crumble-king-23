@@ -7,6 +7,7 @@
 #include "animation.h"
 #include "sound.h"
 #include "enemy.h"
+#include "hitch.h"
 
 struct LevelData {
     std::string name;
@@ -16,7 +17,8 @@ struct LevelData {
 enum class LevelState {
     PRE,
     ACTIVE,
-    POST
+    POST,
+    HITCH
 };
 
 enum class PostLevelBehavior {
@@ -58,7 +60,7 @@ void update_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds,
 void handle_pre_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
 void handle_active_level(Level& level, int atlas, Sequences& sequences, Sounds& sounds, Platform& platform, Settings& settings, double delta_time);
 void handle_post_level(Level& level, int atlas, Sequences& sequences, Platform& platform, Settings& settings, double delta_time);
+void handle_hitch_level(Level& level, Settings& settings, double delta_time);
 void render_level(Level& level, int atlas, Platform& platform);
 void goto_post_level(Level& level, PostLevelBehavior behavior);
 int music_from_level_name(std::string& name, Sounds& sounds);
-
